@@ -1,5 +1,5 @@
 class ResSuccess {
-    constructor({ errno = 0, message = 'Ok.', data = null }) {
+    constructor({ errno = 0, message = 'Ok.', data = null } = {}) {
         this.errno = errno
         this.message = message
         this.data = data

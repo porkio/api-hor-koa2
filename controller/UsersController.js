@@ -1,8 +1,14 @@
+/**
+ * @description UsersController
+ * @author Pork
+ * @email porksb@163.com
+ */
+
 const { User } = require('../models/index')
 const https = require('https')
 const crypto = require('crypto')
 const { redisSet } = require('../db/redis')
-const { getUserInfoError } = require('../config/errorsOptions')
+const { getUserInfoError, updateUserInfoError, paramsMissing } = require('../config/errorsOptions')
 const ResSuccess = require('../config/ResSuccess')
 
 // 请求 session_key
@@ -42,6 +48,25 @@ const getUserInfo = async user_id => {
     }
 }
 
+// 更新用户信息
+const update = async (user_id, prop, value) => {
+    if (!user_id || !prop || !value) return paramsMissing
+    try {
+        const result = await User.update({
+            [prop]: value
+        }, {
+            where: { id: user_id }
+        })
+        if (result) {
+            console.log(result)
+            return new ResSuccess()
+        } else return updateUserInfoError
+
+    } catch (error) {
+        return updateUserInfoError
+    }
+}
+
 // Async 化 https get 请求
 async function _httpsGetAsync (url) {
     // Promise化 https get 请求
@@ -64,5 +89,6 @@ const _tokenGenerator = sessionKey => {
 
 module.exports = {
     getSessionKey,
-    getUserInfo
+    getUserInfo,
+    update
 }

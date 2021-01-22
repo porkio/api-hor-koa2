@@ -1,6 +1,12 @@
+/**
+ * @description UsersController
+ * @author Pork
+ * @email porksb@163.com
+ */
+
 const router = require('koa-router')()
 const { getArticlesListByUserId } = require('../../controller/ArticlesController')
-const { getSessionKey, getUserInfo } = require('../../controller/UsersController')
+const { getSessionKey, getUserInfo, update } = require('../../controller/UsersController')
 const { appid, appSecret } = require('../../config/index')
 const checkAuth = require('../../middleware/checkAuth')
 
@@ -29,20 +35,19 @@ router.get('/detail', checkAuth, async (ctx, next) => {
 
 // 获取当前用户的文章列表
 router.get('/articlesList', checkAuth, async (ctx, next) => {
-    const { user_id, token } = ctx.query
-    console.log('userId: ', user_id)
-    console.log('token: ', token)
+    const { user_id } = ctx.query
     // controller
     const list = await getArticlesListByUserId(user_id)
     ctx.body = { errno: 0, data: list }
 })
 
-// test
-router.post('/test', async (ctx, next) => {
-    ctx.body = {
-        errno: 0,
-        message: 'test Ok.'
-    }
+// 更新用户信息
+router.post('/update', checkAuth, async (ctx, next) => {
+    const { user_id, prop, value } = ctx.request.body
+    console.log(user_id, prop, value)
+
+    // controller
+    ctx.body = await update(user_id, prop, value)
 })
 
 module.exports = router

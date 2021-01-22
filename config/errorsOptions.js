@@ -19,5 +19,9 @@ module.exports = {
     getUserInfoError: {
         errno: 1002,
         message: '获取用户信息出错'
+    },
+    updateUserInfoError: {
+        errno: 1003,
+        message: '更新用户信息出错'
     }
 }
